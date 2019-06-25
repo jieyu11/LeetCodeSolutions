@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        //nums = {1,2,4,8,9,16};
+        //nums = {4,8,10,240};
+        int n = nums.size();
+        if(!n) return vector<int>{};
+        
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> out{n, vector<int>{}};
+        out[0].push_back(nums[0]);
+        for(int i=1; i<n; i++){
+            // at each index i, calculate its longest set.
+            int idx = -1; int max_pre = 0;
+            for(int j=i-1; j>=0; j--){
+                if( nums[i] % out[j].back() == 0 && max_pre < out[j].size()){
+                    max_pre = out[j].size();
+                    idx = j;
+                }
+            }
+            if(idx>=0){
+                out[i] = out[idx];
+                out[i].push_back(nums[i]);
+            }
+            else{
+                out[i].push_back( nums[i] );
+            }
+        }
+        int idx = -1; int max_size = 0;
+        for(int i=0; i<out.size(); i++){ 
+            if(out[i].size() > max_size){
+                max_size = out[i].size();
+                idx = i;
+            } 
+        }
+        return out[idx];
+    }
+};

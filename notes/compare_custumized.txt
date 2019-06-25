@@ -1,0 +1,7 @@
+    struct comparePair {
+        bool operator() (const pair<int, int> & A, const pair<int, int> & B) const {
+            return A.first + A.second < B.first + B.second;
+        }
+    };
+        set<pair<int, int>, comparePair> resultSet;
+

@@ -1,0 +1,57 @@
+**Intuition**
+
+The number of $\bf{\it{Bulls}}$ is exactly the number of cases at position $j$, the value in "Secret" is the same as the value in "Guess".
+In the rest of the characters, count the occurrences of each value in "Secret" and "Guess". The lower number of occurrences is
+the number of $\bf{\it{Cows}}$ for each specific value.
+
+
+**Algorithm**
+
+* Loop over each character in strings "Secret" and "Guess"
+
+* for character index $j$, first check if they are equal. If so, it is a Bull.
+
+* Otherwise, check if the characters from both "Secret" and "Guess" have been recorded or not. If so, add one more occurrence correspondingly.
+  Use a pair to keep the number of occurrences in "Secret" (pair->first) and "Guess" (pair->second).
+
+* After looping over the strings, count the number of cows.
+
+
+**C++**
+```C++
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        // map key: character (value) either in Secret or Guess
+        // map value: first -> count in Secret, second -> count in Guess
+        typedef unordered_map<int, pair<int,int>> IntPair;
+        IntPair countMap;
+        int iA = 0, n = secret.size();
+        for(int j=0; j<n; j++){
+            if(secret[j]==guess[j]) iA++;
+            else{
+                int id = secret[j] - '0';
+                if(countMap.find(id) != countMap.end()) countMap[id].first += 1;
+                else countMap.insert( make_pair(id, make_pair(1,0) ) );
+                id = guess[j] - '0';
+                if(countMap.find(id) != countMap.end()) countMap[id].second += 1;
+                else countMap.insert( make_pair(id, make_pair(0,1) ) );
+            }
+        }
+        // count the number of cows.
+        int iB = 0;
+        for(IntPair::iterator it = countMap.begin(); it!= countMap.end(); it++){
+            iB += min( (it->second).first, (it->second).second );
+        }
+        string result = to_string(iA) + "A" + to_string(iB) + "B";
+        return result;
+    }
+};
+```
+
+**Complexity Analysis**
+
+* Time complexity : $O(n)$. Each string is looped once.
+
+* Space complexity : $O(n)$. We need $O(n)$ space for the counting map to record the occurrences of each value from input strings.
+    

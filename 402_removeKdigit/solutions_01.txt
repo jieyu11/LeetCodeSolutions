@@ -1,0 +1,34 @@
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        int istart = 0;
+        while(k>0){
+            if(num.empty()) return "0";
+            size_t i = num.find( "0" );
+            if(i!=string::npos && i<=k){
+                num = num.substr(i+1);
+                k -= i;
+                istart = 0;
+            }else{
+                int idx=-1; // first to drop
+                int nrest = num.size();
+                for(int j=istart; j<nrest-1; j++){
+                    if(num[j]>num[j+1]){
+                        idx = j;
+                        break;
+                    }
+                }
+                if(idx>=0){ 
+                    num.erase(idx, 1);
+                    istart = 0;
+                    if(idx>0) istart = idx - 1;
+                    k--;
+                }else{
+                    num.erase(nrest - k, k); k = 0;
+                }
+            }
+        }
+        if(num=="") return "0";
+        return num;
+    }
+};

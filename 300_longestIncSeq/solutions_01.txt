@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int test(vector<int>& nums){
+        vector<int> res;
+        for(int & i : nums){
+            if(res.empty()) res.push_back(i);
+            else{
+                int n = res.size();
+                if(n==1){ 
+                    if(res[0] > i) res[0] = i;
+                    else if(res[0] < i) res.push_back( i );
+                }
+                else if( n >= 2){
+                    if(i>res[n-1]) res.push_back( i );
+                    else if( i > res[n-2]) res[n-1] = i;
+                }
+            }
+        }
+        //for(int & i : res) cout<<i<<endl;
+        return int( res.size() );        
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> nums_reverse;
+        for(int i=0; i<n; i++) nums_reverse.push_back( -1 * nums[n-i-1] );
+        int res1 = test(nums);
+        int res2 = test(nums_reverse);
+        return max(res1, res2);
+    }
+};

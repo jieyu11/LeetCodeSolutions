@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool canCross(vector<int>& stones) {
+        //stones = {0,1,2,3,4,8,9,11};
+        int n = stones.size();
+        if(n<=1) return true;
+        queue<pair<int, int>> idxStep; // position index, previously jumped steps
+        if(stones[1]>1) return false;
+        if(n==2) return true;
+        
+        set<pair<int,int>> tested;
+        tested.insert({1,1});
+        idxStep.push({1,1});
+        while(! idxStep.empty()){
+            pair<int, int> iS = idxStep.front(); idxStep.pop();
+            for(int i=iS.first+1; i<n; i++){
+                int ijump = stones[i]-stones[iS.first];
+                if(ijump>=iS.second-1 && ijump<=iS.second+1){
+                    if(i==n-1) return true;
+                    if(tested.find({i, ijump}) == tested.end()){
+                        idxStep.push({i, ijump});
+                        tested.insert({i, ijump});
+                    }
+                }else if(ijump > iS.second+1) break;
+            }
+        }
+        return false;
+    }
+};
